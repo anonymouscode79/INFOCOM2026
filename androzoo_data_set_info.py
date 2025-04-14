@@ -1,0 +1,31 @@
+from easydict import EasyDict as edict
+androzoo = edict()
+androzoo= androzoo
+
+androzoo.no_tasks = 10
+androzoo.mem_size = 2000 # 2000
+androzoo.mem_size_semi_supervised = 2000 #2000
+androzoo.replay_size = 1500
+androzoo.n_epochs = 5
+androzoo.minority_allocation = 0.8
+androzoo.batch_size = 64
+androzoo.learning_rate = 1e-4#0.001
+androzoo.label = 'androzoo'
+androzoo.enable_checkpoint = False
+androzoo.taskaware_ecbrs = False
+androzoo.train_data_lstm = 0.5
+androzoo.num_mini_tasks = 200
+androzoo.lstm_epochs = 3
+androzoo.interim_model_epochs = 1
+androzoo.lstm_hidden_size = 10
+androzoo.param_weights_queue_length = 50
+androzoo.pattern_per_exp = 50
+androzoo.is_lazy_training = True
+androzoo.clstrategy = None
+androzoo.store_weights = False
+androzoo.train_lstm = True
+androzoo.store_grads = False
+androzoo.image_resolution = None
+androzoo.bool_encode_anomaly=False
+androzoo.bool_encode_benign=False
+androzoo.load_whole_train_data=False

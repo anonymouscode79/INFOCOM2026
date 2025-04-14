@@ -1,0 +1,31 @@
+from easydict import EasyDict as edict
+ember = edict()
+ember= ember
+
+ember.no_tasks = 10
+ember.mem_size = 2000 # 2000
+ember.mem_size_semi_supervised = 2000 #2000
+ember.replay_size = 1500
+ember.n_epochs = 5
+ember.minority_allocation = 0.8
+ember.batch_size = 64
+ember.learning_rate = 1e-4#0.001
+ember.label = 'ember'
+ember.enable_checkpoint = False
+ember.taskaware_ecbrs = False
+ember.train_data_lstm = 0.5
+ember.num_mini_tasks = 200
+ember.lstm_epochs = 3
+ember.interim_model_epochs = 1
+ember.lstm_hidden_size = 10
+ember.param_weights_queue_length = 50
+ember.pattern_per_exp = 50
+ember.is_lazy_training = True
+ember.clstrategy = None
+ember.store_weights = False
+ember.train_lstm = True
+ember.store_grads = False
+ember.image_resolution = None
+ember.bool_encode_anomaly=False
+ember.bool_encode_benign=False
+ember.load_whole_train_data=False

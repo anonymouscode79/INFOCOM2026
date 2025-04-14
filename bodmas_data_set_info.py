@@ -1,0 +1,31 @@
+from easydict import EasyDict as edict
+bodmas = edict()
+bodmas= bodmas
+
+bodmas.no_tasks = 10
+bodmas.mem_size = 2000 # 2000
+bodmas.mem_size_semi_supervised = 2000 #2000
+bodmas.replay_size = 1500
+bodmas.n_epochs = 5
+bodmas.minority_allocation = 0.8
+bodmas.batch_size = 64
+bodmas.learning_rate = 1e-4#0.001
+bodmas.label = 'bodmas'
+bodmas.enable_checkpoint = False
+bodmas.taskaware_ecbrs = False
+bodmas.train_data_lstm = 0.5
+bodmas.num_mini_tasks = 200
+bodmas.lstm_epochs = 3
+bodmas.interim_model_epochs = 1
+bodmas.lstm_hidden_size = 10
+bodmas.param_weights_queue_length = 50
+bodmas.pattern_per_exp = 50
+bodmas.is_lazy_training = True
+bodmas.clstrategy = None
+bodmas.store_weights = False
+bodmas.train_lstm = True
+bodmas.store_grads = False
+bodmas.image_resolution = None
+bodmas.bool_encode_anomaly=False
+bodmas.bool_encode_benign=False
+bodmas.load_whole_train_data=False
