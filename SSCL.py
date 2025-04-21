@@ -2988,14 +2988,17 @@ def train(str_train_model,tasks,task_class_ids,task_id,feature_list,threshold,X_
                 mem_feat = model.forward_encoder(memory_torch)
                 mem_feat = mem_feat.detach()
                 U, S, Vh = torch.linalg.svd(mem_feat, full_matrices=False)  # GPU-compatible SVD
-                basis = Vh.T # Basis of the vector space of mem_feat
+                sval_total = (S**2).sum()
+                sval_ratio = (S**2)/sval_total
+                r = np.sum(np.cumsum(sval_ratio.detach().cpu().numpy())<0.95)
+                basis = Vh[:r]
             # Normalize mem_feat directly on the GPU
             bce_loss = torch.tensor(0, dtype=torch.int32)
             if task_id > 0:
                 mem_feat_norm = F.normalize(mem_feat, p=2, dim=1)
             # Projection of Unlabelled onto the that space
                 feat_unlab = model.forward_encoder(unlabeled_data)
-                projected_unlabelled = feat_unlab @ basis @ basis.T
+                projected_unlabelled = feat_unlab @ basis.T @ basis
             # Calculating the cosine_similarity
             # cosine_similarities_matrix = []
             # for proj_sample in projected_unlabelled:
@@ -3020,6 +3023,7 @@ def train(str_train_model,tasks,task_class_ids,task_id,feature_list,threshold,X_
             # Calculate cosine similarities using matrix multiplication (vectorized)
                 memory_torch = torch.cat([torch.from_numpy(memory_X).to(device)])
                 mem_feat = model.forward_encoder(memory_torch).detach()
+                mem_feat =  mem_feat @ basis.T @ basis
                 mem_feat_norm = F.normalize(mem_feat, p=2, dim=1)
                 cosine_similarities_matrix = 1-torch.mm(proj_unlab_norm, mem_feat_norm.t()).detach().cpu().numpy()
             # Apply soft threshold to get indices with high similarity
@@ -3275,11 +3279,11 @@ def train(str_train_model,tasks,task_class_ids,task_id,feature_list,threshold,X_
     temp_x,temp_y,temp_yname = X[labeled_indicies,:],y[labeled_indicies],y_classname[labeled_indicies]
     # mat_list = get_representation_matrix (model, device, temp_x, temp_y)
     for i in model.act.keys():
-        if ds == "api_graph":
+        if ds in ['api_graph', 'androzoo']:
             threshold.append(np.random.choice([0.1,0.10,0.10,0.10,0.1,0.1,0.1],1)[0])
         else:
             threshold.append(np.random.choice([0.95,0.99,0.99,0.98,0.99,0.99,0.99],1)[0])
-        # threshold.append(np.random.choice([0.95,0.99,0.99,0.98,0.99,0.99,0.99],1)[0])
+        
     if bool_gpm:
         mat_list = get_representation_matrix (model, device, temp_x, temp_y,rand_samples=no_of_rand_samples)
         feature_list = update_GPM(model, mat_list, threshold, feature_list)
