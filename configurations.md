@@ -6,7 +6,7 @@ This Markdown outlines the commands used for running experiments on various data
 ## Our Method
 ### **Bodmas**
 ```bash 
-python3 SSCL_main.py --ds=bodmas --training_cutoff=5 --lr=0.1 --wd=1e-9 --label_ratio=0.2 --b_m=0.5 --bma=0.8 --analyst_labels=100 --upper_thresh=0.09
+python3 SSCL_main.py --ds=bodmas --training_cutoff=5 --lr=0.1 --wd=1e-9 --label_ratio=0.2 --b_m=0.5 --bma=0.8 --analyst_labels=100 --upper_thresh=0.01
 
 ```
 ### **Androzoo**
@@ -17,7 +17,7 @@ python3 SSCL_main.py --ds=androzoo --training_cutoff=12 --lr=0.01 --wd=0.1 --lab
 ```
 ### **ApiGraph**
 ```bash
-python3 SSCL_main.py --ds=api_graph --training_cutoff=35 --lr=0.1 --wd=1e-4 --label_ratio=0.2  --b_m=0.6 --bma=0.7 --analyst_labels=100 --upper_thresh=0.05
+python3 SSCL_main.py --ds=api_graph --training_cutoff=35 --lr=0.1 --wd=1e-4 --label_ratio=0.2  --b_m=0.6 --bma=0.7 --analyst_labels=100 --upper_thresh=0.03
 ```
 ---
 
