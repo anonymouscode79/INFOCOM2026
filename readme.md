@@ -114,3 +114,85 @@ We perform **grid search** to find optimal values. The search spaces are:
 - **BODMAS**: `b_m = 0.5`, `bma = 0.8`, `lr = 1e-1`, `weight decay = 1e-9`, `τ_max = 0.09`  
 - **AndroZoo**: `b_m = 0.3`, `bma = 0.4`, `lr = 1e-2`, `weight decay = 1e-1`, `τ_max = 0.05`  
 - **APIGraph**: `b_m = 0.6`, `bma = 0.7`, `lr = 1e-1`, `weight decay = 1e-4`, `τ_max = 0.05`
+
+
+
+## Details About Baseline Methods
+
+### HCL
+
+For **Hierarchical Contrastive Learning (HCL)**, we use the same model architecture as in the original paper. The model consists of an encoder that reduces the input feature dimensions to 512, 384, 256, and finally 128, followed by a classifier with two hidden layers of 100 neurons each and a final 2-neuron output layer. The model outputs normalized softmax probabilities. ReLU activation is applied after each hidden layer.
+
+The model is trained for 50 epochs with early stopping (patience of 3) based on the PR-AUC score of the validation set. We use a batch size of 64 for all datasets, a margin value of 1, and set λ to 100. The **Adam optimizer** is used with default settings. Grid search is used to select the best learning rate and weight decay from the search space: `{1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7}`.
+
+- **API Graph**: `lr = 1e-4`, `weight decay = 1e-6`  
+- **BODMAS**: `lr = 1e-4`, `weight decay = 1e-7`  
+- **AndroZoo**: `lr = 1e-5`, `weight decay = 1e-5`
+
+---
+
+### CADE
+
+For **CADE**, we use the same architecture as in the original paper: an encoder and decoder with dimensions `512-128-32-7`, applying ReLU after each layer except the last. An MLP classifier with two hidden layers of 100 neurons and a final 2-neuron output layer is used, identical to HCL. Both the autoencoder and MLP are trained using **Adam optimizer** and early stopping (patience of 7), based on PR-AUC.
+
+The hyperparameter search space is the same: `{1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7}`.
+
+- **API Graph**: `lr = 1e-3`, `weight decay = 1e-7`  
+- **BODMAS**: `lr = 1e-2`, `weight decay = 1e-7`  
+- **AndroZoo**: `lr = 1e-3`, `weight decay = 1e-6`
+
+---
+
+### Continual Learning Baselines
+
+We evaluate **AGEM** and **EWC** using the Avalanche library.  
+- **AGEM**: `patterns_per_exp = 256`, `sample_size = 64`, `mini-batch size = 64`  
+- **EWC**: `ewc_lambda = 0.4`, `mini-batch size = 64`
+
+We also implement **MIR** and **CBRS**, using:
+- A step scheduler (`gamma = 0.96`)
+- Early stopping (patience = 3)
+- SGD optimizer
+- Grid search over learning rate and weight decay (`{1e-1 ... 1e-7}`)
+- Replay size = 1500, memory size = 2000 (except APIGraph with CBRS: replay = 500, memory = 1000, minority allocation = 0.8)
+
+#### Best Hyperparameters
+
+**MIR**  
+- API Graph: `lr = 0.01`, `weight decay = 0.01`  
+- BODMAS: `lr = 0.001`, `weight decay = 1e-6`  
+- AndroZoo: `lr = 0.01`, `weight decay = 0.001`
+
+**CBRS**  
+- API Graph: `lr = 0.1`, `weight decay = 0.001`  
+- BODMAS: `lr = 0.01`, `weight decay = 1e-6`  
+- AndroZoo: `lr = 0.1`, `weight decay = 0.001`
+
+**EWC**  
+- API Graph: `lr = 0.01`, `weight decay = 1e-5`  
+- BODMAS: `lr = 0.1`, `weight decay = 1e-7`  
+- AndroZoo: `lr = 0.01`, `weight decay = 1e-5`
+
+**AGEM**  
+- API Graph: `lr = 0.01`, `weight decay = 1e-6`  
+- BODMAS: `lr = 0.01`, `weight decay = 1e-7`  
+- AndroZoo: `lr = 0.01`, `weight decay = 1e-7`
+
+
+## Hardware and ML Frameworks
+
+Our experiments were conducted on a high-performance server with the following specifications:
+
+- **Memory**: 376 GB  
+- **CPU**: 104 cores — Intel(R) Xeon(R) Gold 6230R @ 2.10 GHz  
+- **GPU**: 2 × Nvidia Quadro RTX 5000
+
+### Software and Libraries
+
+- **Python**: 3.8.13  
+- **PyTorch**: 1.13  
+- **CUDA**: 11.6.124  
+- **Continual Learning Library**: [Avalanche](https://avalanche.continualai.org/) (version 0.2.1)
+
+We use the Avalanche library to implement continual learning baselines such as **EWC** and **A-GEM**. Other baselines, including **MIR**, **CBRS**, and our **proposed method**, are implemented using **PyTorch**.
+
