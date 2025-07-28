@@ -69,3 +69,48 @@ where:
 Edit the Metadata.py file to change the dataset path.
 
 
+## Limitations
+
+This section outlines the limitations of the proposed method, considering both its design assumptions and observations from empirical studies.
+
+### 1. Size of Buffer Memory
+The method assumes a growing memory size to store partially labeled samples from all previously seen tasks. After an initial phase, the memory grows steadily based on the labeling budget. This assumption may not hold when deploying the method on memory-constrained hardware.
+
+### 2. Security of the ML Model
+It is important to recognize that the developed model could potentially be exploited by adversaries to generate more sophisticated malware. By publishing these findings, we aim to balance advancing defensive capabilities with the risk of misuse. However, issues such as adversarial attacks are beyond the scope of this work and are not addressed.
+
+### 3. Labeling Assumption
+The approach assumes that security analysts can provide correct labels for uncertain, unlabeled samples. This implies a high level of domain expertise and error-free labeling. Consequently, this work does not explicitly handle scenarios involving noisy or incorrect labels.
+
+
+
+## Additional Details About Our Proposed Model
+
+The model used in our experiments consists of two subnetworks: an **encoder** and a **classifier**.
+
+- The **encoder** first reduces the dimensionality to 100, then progressively increases it to 250 and 500, and finally reduces it to 150 and 50. After each layer, we apply Batch Normalization, Dropout (with a ratio of 0.2), and a ReLU activation. Layer weights are initialized using the **Kaiming Uniform** method to improve convergence.
+
+- The **classifier** is a simple linear layer that outputs two neurons—one for each class (benign and malware). The model outputs raw logits from the classifier.
+
+### Hyperparameters
+
+The key hyperparameters include:
+
+- `b_m`: Percentage of batch size that contains memory samples  
+- `bma`: Percentage of malware samples within `b_m`  
+- `learning rate`, `weight decay`, and `maximum threshold (τ)`  
+- Analyst-provided labels
+
+We perform **grid search** to find optimal values. The search spaces are:
+
+- `b_m`: 0.1 to 0.7  
+- `bma`: 0.1 to 0.9  
+- `learning rate`: {1e-1, 1e-2, 1e-3, 1e-4, 1e-5}  
+- `weight decay`: {1e-1 to 1e-9}  
+- `τ_max`: 0.1 to 0.3
+
+### Best Hyperparameters per Dataset
+
+- **BODMAS**: `b_m = 0.5`, `bma = 0.8`, `lr = 1e-1`, `weight decay = 1e-9`, `τ_max = 0.09`  
+- **AndroZoo**: `b_m = 0.3`, `bma = 0.4`, `lr = 1e-2`, `weight decay = 1e-1`, `τ_max = 0.05`  
+- **APIGraph**: `b_m = 0.6`, `bma = 0.7`, `lr = 1e-1`, `weight decay = 1e-4`, `τ_max = 0.05`
