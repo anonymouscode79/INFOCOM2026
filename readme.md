@@ -73,13 +73,10 @@ Edit the Metadata.py file to change the dataset path.
 
 This section outlines the limitations of the proposed method, considering both its design assumptions and observations from empirical studies.
 
-### 1. Size of Buffer Memory
-The method assumes a growing memory size to store partially labeled samples from all previously seen tasks. After an initial phase, the memory grows steadily based on the labeling budget. This assumption may not hold when deploying the method on memory-constrained hardware.
-
-### 2. Security of the ML Model
+### 1. Security of the ML Model
 It is important to recognize that the developed model could potentially be exploited by adversaries to generate more sophisticated malware. By publishing these findings, we aim to balance advancing defensive capabilities with the risk of misuse. However, issues such as adversarial attacks are beyond the scope of this work and are not addressed.
 
-### 3. Labeling Assumption
+### 2. Labeling Assumption
 The approach assumes that security analysts can provide correct labels for uncertain, unlabeled samples. This implies a high level of domain expertise and error-free labeling. Consequently, this work does not explicitly handle scenarios involving noisy or incorrect labels.
 
 
